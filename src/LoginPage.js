@@ -62,6 +62,7 @@ class LoginPage extends React.Component {
 
     render() {
         if (this.state.isLoggedIn) {
+            sessionStorage.setItem('user',"test")
             return <Redirect to='/' />;
         }
 
