@@ -13,6 +13,7 @@ class LoginPage extends React.Component {
       username: "",
       password: "",
       message: "",
+      user_id: "",
       token: "",
       isLoggedIn: false,
     };
@@ -30,6 +31,7 @@ class LoginPage extends React.Component {
       if (result.status === 200 && result.data.message === "ok") {
         this.setState({
           isLoggedIn: true,
+          user_id: result.data.user_id,
           token: result.data.token,
         });
       }
@@ -40,6 +42,7 @@ class LoginPage extends React.Component {
   render() {
     if (this.state.isLoggedIn) {
       sessionStorage.setItem("token", this.state.token);
+      sessionStorage.setItem("user_id", this.state.user_id);
       return <Redirect to="/" />;
     }
 
