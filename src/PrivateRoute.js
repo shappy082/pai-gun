@@ -6,7 +6,7 @@ function PrivateRoute({ component: Component, ...rest }) {
     //console.log("PrivateRoute >> sessionStorage is", sessionStorage.getItem('user'));
     return (
         <Route {...rest} render={props => (
-            sessionStorage.getItem('user')
+            sessionStorage.getItem('token')
                 ? <MainLayout {...props} />
                 : <Redirect to="/login" />
         )} />
