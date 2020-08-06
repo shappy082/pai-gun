@@ -32,7 +32,7 @@ class AppTopBar extends React.Component {
                     <Title level={2}>{this.state.page}</Title>
                 </Col>
                 <Col style={{ margin: 10 }}>
-                    <Link to="/"><Avatar icon={<UserOutlined />} style={{ marginRight: 10 }} /></Link>
+                    <Link to="/"><Avatar size="large" icon={<UserOutlined />} style={{ marginRight: 10, border: '1px solid black' }} /></Link>
                     <Button type="primary" danger onClick={() => this.setState({ isLoggedIn: false })}>Signout</Button>
                 </Col>
             </Row>
