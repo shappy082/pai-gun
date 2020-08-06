@@ -2,6 +2,7 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { Row, Col } from 'antd';
 import AppTopBar from './components/AppTopBar'
+import MyPlan from './components/MyPlan'
 
 class Mainlayout extends React.Component {
     render() {
@@ -16,7 +17,7 @@ class Mainlayout extends React.Component {
                     <Col span={24}>
                         <Switch>
                             <Route path="/create">create plan</Route>
-                            <Route path="/">My plan</Route>
+                            <Route path="/"><MyPlan /></Route>
                         </Switch>
                     </Col>
                 </Row>

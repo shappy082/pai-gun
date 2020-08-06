@@ -6,11 +6,16 @@ import App from './App'
 import { HashRouter } from 'react-router-dom'
 import ScrollToTop from './ScrollToTop';
 
+import { Provider } from 'react-redux';
+import store from './store/configureStore';
+
 ReactDOM.render(
   <HashRouter>
-      <ScrollToTop>
-          <App></App>
-      </ScrollToTop>
+    <ScrollToTop>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ScrollToTop>
   </HashRouter>,
   document.getElementById('root')
 );
