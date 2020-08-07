@@ -8,7 +8,6 @@ import {
     Avatar
 } from 'antd';
 import 'antd/dist/antd.css';
-import { green } from '@ant-design/colors';
 import { UserOutlined } from '@ant-design/icons';
 const { Title } = Typography;
 
@@ -27,11 +26,11 @@ class AppTopBar extends React.Component {
             return <Redirect to="/login" />;
         }
         return (
-            <Row justify="space-between" align="middle" style={{ backgroundColor: green[3] }}>
-                <Col style={{ marginLeft: 10, marginTop: 10 }}>
+            <Row justify="space-between" align="middle">
+                <Col style={{ marginTop: 10 }}>
                     <Title level={2}>{this.state.page}</Title>
                 </Col>
-                <Col style={{ margin: 10 }}>
+                <Col>
                     <Link to="/"><Avatar size="large" icon={<UserOutlined />} style={{ marginRight: 10, border: '1px solid black' }} /></Link>
                     <Button type="primary" danger onClick={() => this.setState({ isLoggedIn: false })}>Signout</Button>
                 </Col>

@@ -53,12 +53,11 @@ class MyPlan extends React.Component {
                         }}
                     >
                         <Meta
-                            description={eachPlan.plan.map((eachSubplan, index) => (
+                            description={eachPlan.plan.slice(0, 3).map((eachSubplan, index) => (
                                 <Row key={index}>
                                     <Col flex={1}>{moment(eachSubplan.date).format('LT')}</Col>
                                     <Col flex={11}>{eachSubplan.location_name}</Col>
                                 </Row>
-                                // <div key={index}>{eachSubplan.location_name}</div>
                             ))}
                         />
                     </Card>

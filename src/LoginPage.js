@@ -3,7 +3,7 @@ import axios from "axios";
 import { Redirect, Link } from "react-router-dom";
 import "./index.css";
 import "antd/dist/antd.css";
-import { Form, Input, Button, Checkbox, Row, Col } from "antd";
+import { Form, Input, Button, Row, Col } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 class LoginPage extends React.Component {
@@ -27,7 +27,7 @@ class LoginPage extends React.Component {
           username: values.username,
         }
       );
-      console.log(result);
+      // console.log(result);
       if (result.status === 200 && result.data.message === "ok") {
         this.setState({
           isLoggedIn: true,
@@ -59,9 +59,6 @@ class LoginPage extends React.Component {
             name="normal_login"
             className="login-form"
             style={{ width: 300 }}
-            initialValues={{
-              remember: false,
-            }}
             onFinish={this.onFinish}
           >
             <Form.Item
@@ -93,15 +90,6 @@ class LoginPage extends React.Component {
                 placeholder="Password"
               />
             </Form.Item>
-            <Form.Item>
-              <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox>Remember me</Checkbox>
-              </Form.Item>
-              {/* <a href="" className="login-form-forgot">
-              Forgot password
-            </a> */}
-            </Form.Item>
-
             <Form.Item>
               <Button
                 type="primary"
