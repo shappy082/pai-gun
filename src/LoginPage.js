@@ -113,7 +113,7 @@ class LoginPage extends React.Component {
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             OR
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <Link to="/">Register Now!</Link>
+            <Link to="/signup">Register Now!</Link>
             </Form.Item>
           </Form>
         </Col>
