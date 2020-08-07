@@ -4,6 +4,7 @@ import { Row, Col } from 'antd';
 import AppTopBar from './components/AppTopBar'
 import MyPlan from './components/MyPlan'
 import AddLocation from './components/AddLocation'
+import UpdateLocation from './components/UpdateLocation'
 
 class Mainlayout extends React.Component {
     render() {
@@ -19,6 +20,7 @@ class Mainlayout extends React.Component {
                         <Switch>
                             <Route path="/create">create plan</Route>
                             <Route path="/addLocation"><AddLocation /></Route>
+                            <Route path="/updateLocation"><UpdateLocation /></Route>
                             <Route path="/"><MyPlan /></Route>
                         </Switch>
                     </Col>
