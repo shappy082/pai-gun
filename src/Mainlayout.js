@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom'
 import { Row, Col } from 'antd';
 import AppTopBar from './components/AppTopBar'
 import MyPlan from './components/MyPlan'
+import AddLocation from './components/AddLocation'
 
 class Mainlayout extends React.Component {
     render() {
@@ -17,6 +18,7 @@ class Mainlayout extends React.Component {
                     <Col span={24}>
                         <Switch>
                             <Route path="/create">create plan</Route>
+                            <Route path="/addLocation"><AddLocation /></Route>
                             <Route path="/"><MyPlan /></Route>
                         </Switch>
                     </Col>
