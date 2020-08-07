@@ -27,7 +27,7 @@ class LoginPage extends React.Component {
      onFinish = values => {
         console.log('Received values of form: ', values);
         try {
-             axios.post('http://localhost:8441/user/signin/',
+             axios.post('http://alpha-api:8441/user/signin/',
                 {
                     "password": values.password,
                     "username": values.username
