@@ -54,9 +54,9 @@ class MyPlan extends React.Component {
                     >
                         <Meta
                             description={eachPlan.plan.map((eachSubplan, index) => (
-                                <Row guttter={5} key={index}>
-                                    <Col span={12}>{moment(eachSubplan.date).format('LT')}</Col>
-                                    <Col span={12}>{eachSubplan.location_name}</Col>
+                                <Row key={index}>
+                                    <Col flex={1}>{moment(eachSubplan.date).format('LT')}</Col>
+                                    <Col flex={11}>{eachSubplan.location_name}</Col>
                                 </Row>
                                 // <div key={index}>{eachSubplan.location_name}</div>
                             ))}
@@ -66,9 +66,13 @@ class MyPlan extends React.Component {
                 <Link to="/create">
                     <Button type="primary">Create Plan</Button>
                 </Link>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <Link to="/addLocation">
                     <Button type="primary">Add Location</Button>
+                </Link>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <Link to="/explore">
+                    <Button type="primary">Explore Trip</Button>
                 </Link>
             </div>
         );
