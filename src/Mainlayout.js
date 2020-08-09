@@ -14,23 +14,6 @@ const { Header, Content } = Layout;
 class Mainlayout extends React.Component {
     render() {
         return (
-            <>
-                <Row>
-                    <Col span={24}>
-                        <AppTopBar page="แผนของฉัน" />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={24}>
-                        <Switch>
-                            <Route path="/create">create plan</Route>
-                            <Route path="/addLocation"><AddLocation /></Route>
-                            <Route path="/updateLocation"><UpdateLocation /></Route>
-                            <Route path="/"><MyPlan /></Route>
-                        </Switch>
-                    </Col>
-                </Row>
-            </>
             <Layout>
                 <Header style={{ position: 'fixed', zIndex: 1, width: '100%', backgroundColor: green[3] }} >
                     {/* <Row>
