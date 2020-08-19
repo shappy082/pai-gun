@@ -5,6 +5,7 @@ import { green } from '@ant-design/colors';
 
 import AppTopBar from './components/AppTopBar'
 import MyPlan from './components/MyPlan'
+import CreatePlan from './components/CreatePlan'
 import AddLocation from './components/AddLocation'
 import UpdateLocation from './components/UpdateLocation'
 import Explore from './components/Explore'
@@ -24,7 +25,7 @@ class Mainlayout extends React.Component {
                 </Header>
                 <Content className="site-layout" style={{ marginTop: 67 }}>
                     <Switch>
-                        <Route path="/create">create plan</Route>
+                        <Route path="/create"><CreatePlan /></Route>
                         <Route path="/addLocation"><AddLocation /></Route>
                         <Route path="/explore"><Explore /></Route>
                         <Route path="/"><MyPlan /></Route>
