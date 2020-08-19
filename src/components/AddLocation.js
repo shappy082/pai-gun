@@ -26,7 +26,7 @@ class AddLocation extends React.Component {
       );
       if (result.data.success) {
         console.log("form will reset here");
-        addLocation.resetFields();
+        // addLocation.resetFields();
       }
     } catch (err) {
       alert("data wrong.");
