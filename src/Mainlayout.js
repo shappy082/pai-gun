@@ -7,7 +7,6 @@ import AppTopBar from './components/AppTopBar'
 import MyPlan from './components/MyPlan'
 import CreatePlan from './components/CreatePlan'
 import AddLocation from './components/AddLocation'
-import UpdateLocation from './components/UpdateLocation'
 import Explore from './components/Explore'
 
 const { Header, Content } = Layout;

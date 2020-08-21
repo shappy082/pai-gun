@@ -21,15 +21,16 @@ class AddLocation extends React.Component {
           location_name: values.location_name,
         },
         {
-          Authorization: "Bearer" + sessionStorage.getItem("token"),
+          Authorization: "Bearer " + sessionStorage.getItem('token'),
         }
       );
-      if (result.data.success) {
-        console.log("form will reset here");
-        // addLocation.resetFields();
-      }
+      console.log(result)
+      // if (result.data.success) {
+      //   console.log("form will reset here");
+      //   // addLocation.resetFields();
+      // }
     } catch (err) {
-      alert("data wrong.");
+      alert("Error:", err);
     }
   };
   render() {

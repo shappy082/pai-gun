@@ -1,6 +1,7 @@
 import React from "react";
 import moment from "moment";
 import axios from "axios";
+import { Redirect } from "react-router-dom";
 import {
   Row,
   Col,
@@ -29,6 +30,7 @@ class CreatePlan extends React.Component {
       latestTime: "00:00",
       latestDate: "",
       dataTable: [],
+      done: false
     };
   }
 
@@ -82,8 +84,27 @@ class CreatePlan extends React.Component {
     );
   };
 
-  savePlan = () => {
+  savePlan = async () => {
     console.log(this.state);
+    try {
+      const response = await axios.post(
+        process.env.REACT_APP_API_URL + "/planning/insert",
+        {
+          user_id: sessionStorage.getItem('user_id'),
+          plan_name: this.state.plan_name,
+          plan: this.state.plan
+        }
+      );
+      console.log(response.statusText)
+      if (response.statusText === "Created") {
+        alert("Complete")
+        this.setState({
+          done: true
+        })
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   searchLocation = async (value) => {
@@ -118,12 +139,17 @@ class CreatePlan extends React.Component {
               this.state.latestDate + "T" + this.state.latestTime + ":00.000Z",
           },
         ],
+        dataTable: [],
+        visible: false
       }),
       () => console.log(this.state.plan)
     );
   };
 
   render() {
+    if (this.state.done) {
+      return <Redirect to="/" />
+    }
     const columns = [
       {
         title: "ชื่อ",
@@ -219,9 +245,10 @@ class CreatePlan extends React.Component {
         <Row gutter={[10, 10]}>
           <Col>
             {this.state.plan.map((eachPlan) => (
-              <Row gutter={[10, 10]}>
-                <Col>{eachPlan.date}</Col>
-                <Col>{eachPlan.location_name}</Col>
+              <Row gutter={[10, 10]} align="middle">
+                <Col flex={2}>{moment(eachPlan.date).add(543, 'year').format('D MMMM YYYY')}</Col>
+                <Col flex={2}>{moment(eachPlan.date).utc().format('LT')}</Col>
+                <Col flex={4}>{eachPlan.location_name}</Col>
               </Row>
             ))}
           </Col>
