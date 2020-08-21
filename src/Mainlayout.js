@@ -1,31 +1,37 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
-import { Row, Col } from 'antd';
+import { Layout } from 'antd';
+import { green } from '@ant-design/colors';
+
 import AppTopBar from './components/AppTopBar'
 import MyPlan from './components/MyPlan'
+import CreatePlan from './components/CreatePlan'
 import AddLocation from './components/AddLocation'
+import UpdateLocation from './components/UpdateLocation'
 import Explore from './components/Explore'
+
+const { Header, Content } = Layout;
 
 class Mainlayout extends React.Component {
     render() {
         return (
-            <>
-                <Row>
-                    <Col span={24}>
-                        <AppTopBar page="แผนของฉัน" />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={24}>
-                        <Switch>
-                            <Route path="/create">create plan</Route>
-                            <Route path="/addLocation"><AddLocation /></Route>
-                            <Route path="/explore"><Explore /></Route>
-                            <Route path="/"><MyPlan /></Route>
-                        </Switch>
-                    </Col>
-                </Row>
-            </>
+            <Layout>
+                <Header style={{ position: 'fixed', zIndex: 1, width: '100%', backgroundColor: green[3] }} >
+                    {/* <Row>
+                        <Col> */}
+                    < AppTopBar page="แผนของฉัน" />
+                    {/* </Col>
+                    </Row> */}
+                </Header>
+                <Content className="site-layout" style={{ marginTop: 67 }}>
+                    <Switch>
+                        <Route path="/create"><CreatePlan /></Route>
+                        <Route path="/addLocation"><AddLocation /></Route>
+                        <Route path="/explore"><Explore /></Route>
+                        <Route path="/"><MyPlan /></Route>
+                    </Switch>
+                </Content>
+            </Layout >
         )
     }
 }
