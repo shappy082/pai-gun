@@ -1,9 +1,8 @@
 import React from "react";
 import { Row, Input, Col, Form, Button } from "antd";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import "antd/dist/antd.css";
-import { HomeOutlined } from "@ant-design/icons";
+import { EnvironmentOutlined, GlobalOutlined, TagsOutlined } from "@ant-design/icons";
 
 class AddLocation extends React.Component {
   constructor(props) {
@@ -11,13 +10,14 @@ class AddLocation extends React.Component {
     this.state = {};
   }
   onFinish = async (values) => {
-    var tagArray = values.tag.split(",");
+    console.log("value", values)
+    console.log("Bearer " + sessionStorage.getItem('token'))
     try {
       const result = await axios.post(
         process.env.REACT_APP_API_URL + "/location/insert/",
         {
-          tag: tagArray,
-          location: values.location,
+          tag: values.tag.split(","),
+          location: values.location.split(" "),
           location_name: values.location_name,
         },
         {
@@ -57,7 +57,7 @@ class AddLocation extends React.Component {
               ]}
             >
               <Input
-                prefix={<HomeOutlined className="site-form-item-icon" />}
+                prefix={<EnvironmentOutlined className="site-form-item-icon" />}
                 placeholder="location_name"
               />
             </Form.Item>
@@ -72,8 +72,8 @@ class AddLocation extends React.Component {
               ]}
             >
               <Input
-                prefix={<HomeOutlined className="site-form-item-icon" />}
-                placeholder="location"
+                prefix={<GlobalOutlined className="site-form-item-icon" />}
+                placeholder="latitude longitude"
               />
             </Form.Item>
             <Form.Item
@@ -87,8 +87,8 @@ class AddLocation extends React.Component {
               ]}
             >
               <Input
-                prefix={<HomeOutlined className="site-form-item-icon" />}
-                placeholder="tag,tag,tag"
+                prefix={<TagsOutlined className="site-form-item-icon" />}
+                placeholder="ex. tag,tag,tag"
               />
             </Form.Item>
             <Form.Item name="submit">
