@@ -155,6 +155,12 @@ class CreatePlan extends React.Component {
     );
   };
 
+  onDelete = (key, e) => {
+    e.preventDefault();
+    const plan = this.state.plan.filter((item) => item.key !== key);
+    this.setState({ plan, isPageTween: false });
+  };
+
   render() {
     if (this.state.isLoggedIn === false) {
       sessionStorage.clear();
@@ -209,6 +215,59 @@ class CreatePlan extends React.Component {
         ),
       },
     ];
+    const columns_display = [
+      {
+        title: () => (
+          <div align="middle">
+            <strong>วันที่</strong>
+          </div>
+        ),
+        dataIndex: "date",
+        key: "date",
+        render: (date) => <div align="middle">{moment(date).format("LL")}</div>,
+      },
+      {
+        title: () => (
+          <div align="middle">
+            <strong>เวลา</strong>
+          </div>
+        ),
+        dataIndex: "date",
+        key: "date",
+        render: (date) => (
+          <div align="middle">{moment(date).utc().format("LT")}</div>
+        ),
+      },
+      {
+        title: () => (
+          <div align="middle">
+            <strong>สถานที่</strong>
+          </div>
+        ),
+        dataIndex: "location_name",
+        key: "location_name",
+        render: (location_name) => <div align="middle">{location_name}</div>,
+      },
+      {
+        title: () => (
+          <div align="middle">
+            <strong>Action</strong>
+          </div>
+        ),
+        dataIndex: "",
+        key: "x",
+        render: (record) => (
+          <span
+            onClick={(e) => {
+              console.log(record.key);
+              // this.onDelete(record.key, e);
+            }}
+          >
+            <div align="middle">Delete</div>
+          </span>
+        ),
+      },
+    ];
     return (
       <div>
         <Row
@@ -219,12 +278,12 @@ class CreatePlan extends React.Component {
             marginBottom: 10,
           }}
         >
-          <Col flex={5} style={{ margin: 10 }}>
+          <Col flex={2} style={{ margin: 10 }}>
             <Title level={2} style={{ marginTop: 10 }}>
               สร้างแผนใหม่
             </Title>
           </Col>
-          <Col span={19} align="right" style={{ margin: 10 }}>
+          <Col flex={5} align="right" style={{ margin: 10 }}>
             <Link to="/">
               <Avatar
                 size="large"
@@ -285,19 +344,21 @@ class CreatePlan extends React.Component {
             </Col>
           </Row>
           <hr></hr>
-          <Row gutter={[10, 10]}>
-            <Col>
-              {this.state.plan.map((eachPlan) => (
-                <Row gutter={[10, 10]} align="middle">
-                  <Col flex={2}>
-                    {moment(eachPlan.date)
-                      .add(543, "year")
-                      .format("D MMMM YYYY")}
-                  </Col>
-                  <Col flex={2}>{moment(eachPlan.date).utc().format("LT")}</Col>
-                  <Col flex={4}>{eachPlan.location_name}</Col>
-                </Row>
-              ))}
+          <Row
+            type="flex"
+            justify="center"
+            align="top"
+            style={{ marginBottom: 10 }}
+          >
+            <Col style={{ width: "500px" }}>
+              <Table
+                bordered
+                rowKey={this.state.plan._id}
+                columns={columns_display}
+                dataSource={this.state.plan}
+                pagination={false}
+                size="large"
+              />
             </Col>
           </Row>
           <Modal

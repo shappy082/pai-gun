@@ -79,12 +79,12 @@ class MyPlan extends React.Component {
             marginBottom: 10,
           }}
         >
-          <Col flex={5} style={{ margin: 10 }}>
+          <Col flex={2} style={{ margin: 10 }}>
             <Title level={2} style={{ marginTop: 10 }}>
               แผนของฉัน
             </Title>
           </Col>
-          <Col span={19} align="right" style={{ margin: 10 }}>
+          <Col flex={5} align="right" style={{ margin: 10 }}>
             <Link to="/">
               <Avatar
                 size="large"
@@ -157,7 +157,7 @@ class MyPlan extends React.Component {
                 .map((eachSubplan, index) => (
                   <Row key={index}>
                     <Col flex={1}>
-                      {moment(eachSubplan.date).utc().format("HH:MM")}
+                      {moment(eachSubplan.date).utc().format("LT")}
                     </Col>
                     <Col flex={11}>{eachSubplan.location_name}</Col>
                   </Row>
