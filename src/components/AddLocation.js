@@ -61,12 +61,12 @@ class AddLocation extends React.Component {
             marginBottom: 10,
           }}
         >
-          <Col flex={5} style={{ margin: 10 }}>
+          <Col flex={2} style={{ margin: 10 }}>
             <Title level={2} style={{ marginTop: 10 }}>
               เพิ่มสถานที่
             </Title>
           </Col>
-          <Col span={19} align="right" style={{ margin: 10 }}>
+          <Col flex={5} align="right" style={{ margin: 10 }}>
             <Link to="/">
               <Avatar
                 size="large"
