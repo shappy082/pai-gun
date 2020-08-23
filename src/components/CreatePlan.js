@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 import axios from "axios";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import {
   Row,
   Col,
@@ -14,8 +14,10 @@ import {
   ConfigProvider,
   Table,
   Tag,
+  Avatar,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, UserOutlined } from "@ant-design/icons";
+import { yellow } from "@ant-design/colors";
 import locale from "antd/es/locale/th_TH";
 const { Title } = Typography;
 const { Search } = Input;
@@ -30,7 +32,8 @@ class CreatePlan extends React.Component {
       latestTime: "00:00",
       latestDate: "",
       dataTable: [],
-      done: false
+      done: false,
+      isLoggedIn: true,
     };
   }
 
@@ -86,24 +89,30 @@ class CreatePlan extends React.Component {
 
   savePlan = async () => {
     console.log(this.state);
-    try {
-      const response = await axios.post(
-        process.env.REACT_APP_API_URL + "/planning/insert",
-        {
-          user_id: sessionStorage.getItem('user_id'),
-          plan_name: this.state.plan_name,
-          plan: this.state.plan
+    if (this.state.plan_name === "") {
+      alert("โปรดใส่ชื่อแผนการท่องเที่ยว");
+    } else if (this.state.plan.length < 3) {
+      alert("โปรดเพิ่มแผนการท่องเที่ยวมากกว่านี้");
+    } else {
+      try {
+        const response = await axios.post(
+          process.env.REACT_APP_API_URL + "/planning/insert",
+          {
+            user_id: sessionStorage.getItem("user_id"),
+            plan_name: this.state.plan_name,
+            plan: this.state.plan,
+          }
+        );
+        console.log(response.statusText);
+        if (response.statusText === "Created") {
+          alert("Complete");
+          this.setState({
+            done: true,
+          });
         }
-      );
-      console.log(response.statusText)
-      if (response.statusText === "Created") {
-        alert("Complete")
-        this.setState({
-          done: true
-        })
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.error(err);
     }
   };
 
@@ -140,22 +149,26 @@ class CreatePlan extends React.Component {
           },
         ],
         dataTable: [],
-        visible: false
+        visible: false,
       }),
       () => console.log(this.state.plan)
     );
   };
 
   render() {
+    if (this.state.isLoggedIn === false) {
+      sessionStorage.clear();
+      return <Redirect to="/login" />;
+    }
     if (this.state.done) {
-      return <Redirect to="/" />
+      return <Redirect to="/" />;
     }
     const columns = [
       {
         title: "ชื่อ",
         dataIndex: "location_name",
         key: "location_name",
-        render: (text) => <a>{text}</a>,
+        render: (text) => <div>{text}</div>,
       },
       {
         title: "ตำแหน่ง",
@@ -197,115 +210,150 @@ class CreatePlan extends React.Component {
       },
     ];
     return (
-      <div style={{ margin: 10 }}>
-        <Row gutter={[10, 10]} justify="space-between" align="middle">
-          <Col>
-            <Row align="middle" gutter={10}>
+      <div>
+        <Row
+          justify="space-between"
+          align="middle"
+          style={{
+            backgroundColor: yellow[3],
+            marginBottom: 10,
+          }}
+        >
+          <Col flex={5} style={{ margin: 10 }}>
+            <Title level={2} style={{ marginTop: 10 }}>
+              สร้างแผนใหม่
+            </Title>
+          </Col>
+          <Col span={19} align="right" style={{ margin: 10 }}>
+            <Link to="/">
+              <Avatar
+                size="large"
+                icon={<UserOutlined />}
+                style={{ marginRight: 10, border: "1px solid black" }}
+              />
+            </Link>
+            <Button
+              type="primary"
+              danger
+              onClick={() => this.setState({ isLoggedIn: false })}
+            >
+              Signout
+            </Button>
+          </Col>
+        </Row>
+        <div style={{ margin: 10 }}>
+          <Row gutter={[10, 10]} justify="space-between" align="middle">
+            <Col>
+              <Row align="middle" gutter={10}>
+                <Col>
+                  <Title level={4} style={{ marginTop: 5 }}>
+                    ชื่อ Trip
+                  </Title>
+                </Col>
+                <Col>
+                  <Input
+                    name="plan_name"
+                    placeholder="กรุณาระบุชื่อ"
+                    onChange={this.handleInput}
+                    size="large"
+                  ></Input>
+                </Col>
+              </Row>
+            </Col>
+            <Col>
+              <Button
+                type="primary"
+                onClick={this.savePlan}
+                shape="round"
+                size="large"
+              >
+                บันทึก
+              </Button>
+            </Col>
+          </Row>
+          <Row gutter={[10, 10]}>
+            <Col>
+              <Button
+                type="primary"
+                onClick={this.showModal}
+                shape="round"
+                size="large"
+                icon={<PlusOutlined />}
+              >
+                เพิ่ม
+              </Button>
+            </Col>
+          </Row>
+          <hr></hr>
+          <Row gutter={[10, 10]}>
+            <Col>
+              {this.state.plan.map((eachPlan) => (
+                <Row gutter={[10, 10]} align="middle">
+                  <Col flex={2}>
+                    {moment(eachPlan.date)
+                      .add(543, "year")
+                      .format("D MMMM YYYY")}
+                  </Col>
+                  <Col flex={2}>{moment(eachPlan.date).utc().format("LT")}</Col>
+                  <Col flex={4}>{eachPlan.location_name}</Col>
+                </Row>
+              ))}
+            </Col>
+          </Row>
+          <Modal
+            title="เลือกเวลาและสถานที่"
+            visible={this.state.visible}
+            onOk={this.handleOk}
+            onCancel={this.handleCancel}
+          >
+            <Row gutter={[10, 10]}>
               <Col>
-                <Title level={4} style={{ marginTop: 5 }}>
-                  ชื่อ Trip
-                </Title>
+                <ConfigProvider locale={locale}>
+                  <DatePicker onChange={this.onChangeDate} size="large" />
+                </ConfigProvider>
               </Col>
               <Col>
-                <Input
-                  name="plan_name"
-                  placeholder="กรุณาระบุชื่อ"
-                  onChange={this.handleInput}
-                  size="large"
-                ></Input>
+                <ConfigProvider locale={locale}>
+                  <TimePicker
+                    defaultValue={moment(this.state.latestTime, "HH:mm")}
+                    onChange={this.onChangeTime}
+                    format={"HH:mm"}
+                    minuteStep={15}
+                    size="large"
+                  />
+                </ConfigProvider>
               </Col>
             </Row>
-          </Col>
-          <Col>
-            <Button
-              type="primary"
-              onClick={this.savePlan}
-              shape="round"
-              size="large"
-            >
-              {" "}
-              บันทึก{" "}
-            </Button>
-          </Col>
-        </Row>
-        <Row gutter={[10, 10]}>
-          <Col>
-            <Button
-              type="primary"
-              onClick={this.showModal}
-              shape="round"
-              icon={<PlusOutlined />}
-            >
-              {" "}
-              เพิ่ม{" "}
-            </Button>
-          </Col>
-        </Row>
-        <hr></hr>
-        <Row gutter={[10, 10]}>
-          <Col>
-            {this.state.plan.map((eachPlan) => (
-              <Row gutter={[10, 10]} align="middle">
-                <Col flex={2}>{moment(eachPlan.date).add(543, 'year').format('D MMMM YYYY')}</Col>
-                <Col flex={2}>{moment(eachPlan.date).utc().format('LT')}</Col>
-                <Col flex={4}>{eachPlan.location_name}</Col>
-              </Row>
-            ))}
-          </Col>
-        </Row>
-        <Modal
-          title="เลือกเวลาและสถานที่"
-          visible={this.state.visible}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-        >
-          <Row gutter={[10, 10]}>
-            <Col>
-              <ConfigProvider locale={locale}>
-                <DatePicker onChange={this.onChangeDate} size="large" />
-              </ConfigProvider>
-            </Col>
-            <Col>
-              <ConfigProvider locale={locale}>
-                <TimePicker
-                  defaultValue={moment(this.state.latestTime, "HH:mm")}
-                  onChange={this.onChangeTime}
-                  format={"HH:mm"}
-                  minuteStep={15}
+            <Row gutter={[10, 10]}>
+              <Col>
+                <Search
+                  placeholder="ค้นหาสถานที่"
+                  enterButton="ค้นหา"
                   size="large"
+                  onSearch={(value) => this.searchLocation(value)}
                 />
-              </ConfigProvider>
-            </Col>
-          </Row>
-          <Row gutter={[10, 10]}>
-            <Col>
-              <Search
-                placeholder="ค้นหาสถานที่"
-                enterButton="ค้นหา"
-                size="large"
-                onSearch={(value) => this.searchLocation(value)}
-              />
-            </Col>
-          </Row>
-          <Row gutter={[10, 10]}>
-            <Col span={24}>
-              <Table
-                bordered
-                rowKey="uid"
-                columns={columns}
-                dataSource={this.state.dataTable}
-                pagination={{ pageSize: 10 }}
-                onRow={(record) => {
-                  return {
-                    onClick: () => {
-                      this.selectLocation(record);
-                    },
-                  };
-                }}
-              />
-            </Col>
-          </Row>
-        </Modal>
+              </Col>
+            </Row>
+            <Row gutter={[10, 10]}>
+              <Col span={24}>
+                <Table
+                  bordered
+                  rowKey="uid"
+                  columns={columns}
+                  dataSource={this.state.dataTable}
+                  pagination={{ pageSize: 10 }}
+                  onRow={(record) => {
+                    return {
+                      onClick: () => {
+                        this.selectLocation(record);
+                      },
+                    };
+                  }}
+                />
+              </Col>
+            </Row>
+          </Modal>
+        </div>
       </div>
     );
   }

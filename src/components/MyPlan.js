@@ -1,80 +1,172 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import axios from "axios";
-import moment from 'moment'
-import 'moment/locale/th';
-import { Button, Card, Row, Col } from "antd";
+import moment from "moment";
+import "moment/locale/th";
+import { Button, Card, Row, Col, Avatar, Typography } from "antd";
+import {
+  SearchOutlined,
+  PlusSquareOutlined,
+  GlobalOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { green } from "@ant-design/colors";
+const { Title } = Typography;
 const { Meta } = Card;
 
 class MyPlan extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            plan: [],
-        };
-    }
-    componentDidMount() {
-        this.getAllPlan();
-    }
-
-    getAllPlan = async () => {
-        try {
-            const response = await axios.get(
-                process.env.REACT_APP_API_URL +
-                "/planning/user/" +
-                sessionStorage.getItem("user_id")
-            );
-            // console.log(response.status)
-            // console.log(response.data.data)
-            let results = response.data.data;
-            results.forEach((element) => {
-                this.setState({
-                    plan: [...this.state.plan, element],
-                });
-            });
-        } catch (err) {
-            console.error(err);
-        }
-        console.log("All Plans", this.state.plan);
+  constructor(props) {
+    super(props);
+    this.state = {
+      plan: [],
+      admin: sessionStorage.getItem("role"),
+      isLoggedIn: true,
+      seeDetail: "",
     };
+  }
 
-    render() {
-        return (
-            <div style={{ margin: 10 }}>
-                {this.state.plan.map((eachPlan) => (
-                    <Card
-                        title={eachPlan.plan_name}
-                        extra={moment(eachPlan.create_date).format('LL')}
-                        key={eachPlan.trip_id}
-                        hoverable
-                        style={{
-                            marginBottom: 10,
-                            border: "1px solid black",
-                        }}
-                    >
-                        <Meta
-                            description={eachPlan.plan.slice(0, 3).map((eachSubplan, index) => (
-                                <Row key={index}>
-                                    <Col flex={1}>{moment(eachSubplan.date).format('LT')}</Col>
-                                    <Col flex={11}>{eachSubplan.location_name}</Col>
-                                </Row>
-                            ))}
-                        />
-                    </Card>
-                ))}
-                <Link to="/create">
-                    <Button type="primary">Create Plan</Button>
-                </Link>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <Link to="/addLocation">
-                    <Button type="primary">Add Location</Button>
-                </Link>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <Link to="/explore">
-                    <Button type="primary">Explore Trip</Button>
-                </Link>
-            </div>
-        );
+  componentDidMount() {
+    sessionStorage.setItem("trip_id", "");
+    this.getAllPlan();
+  }
+
+  getAllPlan = async () => {
+    try {
+      const response = await axios.get(
+        process.env.REACT_APP_API_URL +
+          "/planning/user/" +
+          sessionStorage.getItem("user_id")
+      );
+      // console.log(response.status)
+      // console.log(response.data.data)
+      let results = response.data.data;
+      results.forEach((element) => {
+        if (element.status !== false) {
+          this.setState({
+            plan: [...this.state.plan, element],
+          });
+        }
+      });
+    } catch (err) {
+      console.error(err);
     }
+    // console.log("All Plans", this.state.plan);
+  };
+
+  seeDetail = (trip_id) => {
+    console.log("see detail", trip_id);
+    sessionStorage.setItem("trip_id", trip_id);
+    this.setState({
+      seeDetail: trip_id,
+    });
+  };
+
+  render() {
+    if (this.state.isLoggedIn === false) {
+      sessionStorage.clear();
+      return <Redirect to="/login" />;
+    }
+    if (this.state.seeDetail !== "") {
+      return <Redirect to="/detail" />;
+    }
+    return (
+      <div>
+        <Row
+          justify="space-between"
+          align="middle"
+          style={{
+            backgroundColor: green[3],
+            marginBottom: 10,
+          }}
+        >
+          <Col flex={5} style={{ margin: 10 }}>
+            <Title level={2} style={{ marginTop: 10 }}>
+              แผนของฉัน
+            </Title>
+          </Col>
+          <Col span={19} align="right" style={{ margin: 10 }}>
+            <Link to="/">
+              <Avatar
+                size="large"
+                icon={<UserOutlined />}
+                style={{ marginRight: 10, border: "1px solid black" }}
+              />
+            </Link>
+            <Button
+              type="primary"
+              danger
+              onClick={() => this.setState({ isLoggedIn: false })}
+            >
+              Signout
+            </Button>
+          </Col>
+        </Row>
+        <Row gutter={10} justify="space-between" style={{ margin: 10 }}>
+          <Col flex={1}>
+            <Link to="/create">
+              <Button
+                type="primary"
+                style={{ width: "100%" }}
+                size="large"
+                icon={<PlusSquareOutlined />}
+              >
+                สร้างแผนใหม่
+              </Button>
+            </Link>
+          </Col>
+          <Col flex={1} hidden={!this.state.admin}>
+            <Link to="/addLocation">
+              <Button
+                type="primary"
+                style={{ width: "100%" }}
+                size="large"
+                icon={<GlobalOutlined />}
+              >
+                เพิ่มสถานที่ใหม่
+              </Button>
+            </Link>
+          </Col>
+          <Col flex={1}>
+            <Link to="/explore">
+              <Button
+                type="primary"
+                style={{ width: "100%" }}
+                size="large"
+                icon={<SearchOutlined />}
+              >
+                สำรวจแผนการท่องเที่ยว
+              </Button>
+            </Link>
+          </Col>
+        </Row>
+        {this.state.plan.map((eachPlan) => (
+          <Card
+            title={eachPlan.plan_name}
+            extra={moment(eachPlan.create_date).format("LL")}
+            key={eachPlan.trip_id}
+            hoverable
+            style={{
+              margin: 10,
+              border: "1px solid black",
+            }}
+            onClick={() => this.seeDetail(eachPlan.trip_id)}
+          >
+            <Meta
+              description={eachPlan.plan
+                .slice(0, 3)
+                .map((eachSubplan, index) => (
+                  <Row key={index}>
+                    <Col flex={1}>
+                      {moment(eachSubplan.date).utc().format("HH:MM")}
+                    </Col>
+                    <Col flex={11}>{eachSubplan.location_name}</Col>
+                  </Row>
+                ))}
+            />
+          </Card>
+        ))}
+      </div>
+    );
+  }
 }
 export default MyPlan;
