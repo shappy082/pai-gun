@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import ExerciseOne from '../components/ExerciseOne';
+import ExerciseOne from '../../components/ExerciseOne';
 import * as actions from '../actions';
 
 const mapStateToProps = (state) => {

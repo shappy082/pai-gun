@@ -96,6 +96,7 @@ class Explore extends React.Component {
           style={{
             backgroundColor: magenta[3],
             marginBottom: 10,
+            borderBottom: '1px solid black'
           }}
         >
           <Col flex={2} style={{ margin: 10 }}>
