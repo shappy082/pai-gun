@@ -54,7 +54,7 @@ class MyPlan extends React.Component {
   };
 
   seeDetail = (trip_id) => {
-    console.log("see detail", trip_id);
+    // console.log("see detail", trip_id);
     sessionStorage.setItem("trip_id", trip_id);
     this.setState({
       seeDetail: trip_id,

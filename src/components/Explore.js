@@ -18,7 +18,12 @@ class Explore extends React.Component {
       plan: [],
       tags: "",
       isLoggedIn: true,
+      seeDetail: ''
     };
+  }
+
+  componentDidMount() {
+    sessionStorage.removeItem('trip_id')
   }
 
   searchTrip = async () => {
@@ -28,7 +33,7 @@ class Explore extends React.Component {
       try {
         this.setState({ plan: [] });
         var array_tags = this.state.searchInput.split(" ");
-        console.log(array_tags);
+        // console.log(array_tags);
         const response = await axios.post(
           process.env.REACT_APP_API_URL + "/planning/location/",
           {
@@ -38,10 +43,15 @@ class Explore extends React.Component {
         if (response.data.data.length !== 0) {
           let results = response.data.data;
           results.forEach((element) => {
-            this.setState({
-              plan: [...this.state.plan, element],
-            });
+            if (element.status !== false && element.user_id !== Number(sessionStorage.getItem('user_id'))) {
+              this.setState({
+                plan: [...this.state.plan, element],
+              });
+            }
           });
+          if (this.state.plan.length === 0) {
+            alert("ไม่พบแผนการท่องเที่ยว โปรดค้นหาอีกครั้ง");
+          }
         } else {
           this.setState({
             searchInput: "",
@@ -62,10 +72,21 @@ class Explore extends React.Component {
     );
   };
 
+  seeDetail = (trip_id) => {
+    console.log("see detail", trip_id);
+    sessionStorage.setItem("trip_id", trip_id);
+    this.setState({
+      seeDetail: trip_id,
+    });
+  };
+
   render() {
     if (this.state.isLoggedIn === false) {
       sessionStorage.clear();
       return <Redirect to="/login" />;
+    }
+    if (this.state.seeDetail !== "") {
+      return <Redirect to="/detail" />;
     }
     return (
       <div>
@@ -143,6 +164,7 @@ class Explore extends React.Component {
                 marginBottom: 10,
                 border: "1px solid black",
               }}
+              onClick={() => this.seeDetail(eachPlan.trip_id)}
             >
               <Meta
                 description={eachPlan.plan

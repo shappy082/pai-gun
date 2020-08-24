@@ -16,7 +16,7 @@ import {
   Tag,
   Avatar,
 } from "antd";
-import { PlusOutlined, UserOutlined } from "@ant-design/icons";
+import { PlusOutlined, UserOutlined, DeleteOutlined } from "@ant-design/icons";
 import { yellow } from "@ant-design/colors";
 import locale from "antd/es/locale/th_TH";
 const { Title } = Typography;
@@ -44,14 +44,14 @@ class CreatePlan extends React.Component {
   };
 
   handleOk = (e) => {
-    console.log(e);
+    // console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleCancel = (e) => {
-    console.log(e);
+    // console.log(e);
     this.setState({
       visible: false,
     });
@@ -66,29 +66,29 @@ class CreatePlan extends React.Component {
   };
 
   onChangeDate = (value, dateString) => {
-    console.log("Selected Date: ", value);
-    console.log("Formatted Selected Date: ", dateString);
+    // console.log("Selected Date: ", value);
+    // console.log("Formatted Selected Date: ", dateString);
     this.setState(
       {
         latestDate: dateString,
       },
-      () => console.log("after time", this.state)
+      // () => console.log("after time", this.state)
     );
   };
 
   onChangeTime = (time, timeString) => {
-    console.log("Selected Time: ", time);
-    console.log("Formatted Selected Time: ", timeString);
+    // console.log("Selected Time: ", time);
+    // console.log("Formatted Selected Time: ", timeString);
     this.setState(
       {
         latestTime: timeString,
       },
-      () => console.log("after time", this.state)
+      // () => console.log("after time", this.state)
     );
   };
 
   savePlan = async () => {
-    console.log(this.state);
+    // console.log(this.state);
     if (this.state.plan_name === "") {
       alert("โปรดใส่ชื่อแผนการท่องเที่ยว");
     } else if (this.state.plan.length < 3) {
@@ -103,7 +103,7 @@ class CreatePlan extends React.Component {
             plan: this.state.plan,
           }
         );
-        console.log(response.statusText);
+        // console.log(response.statusText);
         if (response.statusText === "Created") {
           alert("Complete");
           this.setState({
@@ -111,13 +111,13 @@ class CreatePlan extends React.Component {
           });
         }
       } catch (err) {
-        console.error(err);
+        alert("Error! Please try again!");
       }
     }
   };
 
   searchLocation = async (value) => {
-    console.log("search input", value.split(" "));
+    // console.log("search input", value.split(" "));
     try {
       const response = await axios.post(
         process.env.REACT_APP_API_URL + "/location/tag",
@@ -126,12 +126,12 @@ class CreatePlan extends React.Component {
         }
       );
       let results = response.data.data;
-      console.log(results);
+      // console.log(results);
       this.setState({
         dataTable: results,
       });
     } catch (err) {
-      console.error(err);
+      alert("Error! Please try again!");
     }
     // console.log("All Plans", this.state.plan);
   };
@@ -151,14 +151,13 @@ class CreatePlan extends React.Component {
         dataTable: [],
         visible: false,
       }),
-      () => console.log(this.state.plan)
+      // () => console.log(this.state.plan)
     );
   };
 
-  onDelete = (key, e) => {
-    e.preventDefault();
-    const plan = this.state.plan.filter((item) => item.key !== key);
-    this.setState({ plan, isPageTween: false });
+  onDelete = (record) => {
+    let filteredArray = this.state.plan.filter(item => item.location_id !== record.location_id)
+    this.setState({ plan: filteredArray });
   };
 
   render() {
@@ -218,13 +217,14 @@ class CreatePlan extends React.Component {
     const columns_display = [
       {
         title: () => (
-          <div align="middle">
+          <div align="middle" >
             <strong>วันที่</strong>
           </div>
         ),
         dataIndex: "date",
         key: "date",
         render: (date) => <div align="middle">{moment(date).format("LL")}</div>,
+        width: 250
       },
       {
         title: () => (
@@ -237,6 +237,7 @@ class CreatePlan extends React.Component {
         render: (date) => (
           <div align="middle">{moment(date).utc().format("LT")}</div>
         ),
+        width: 100
       },
       {
         title: () => (
@@ -247,6 +248,7 @@ class CreatePlan extends React.Component {
         dataIndex: "location_name",
         key: "location_name",
         render: (location_name) => <div align="middle">{location_name}</div>,
+        width: 350
       },
       {
         title: () => (
@@ -257,15 +259,11 @@ class CreatePlan extends React.Component {
         dataIndex: "",
         key: "x",
         render: (record) => (
-          <span
-            onClick={(e) => {
-              console.log(record.key);
-              // this.onDelete(record.key, e);
-            }}
-          >
-            <div align="middle">Delete</div>
-          </span>
+          <div align="middle">
+            <Button type="danger" icon={<DeleteOutlined />} onClick={() => this.onDelete(record)}></Button>
+          </div>
         ),
+        width: 50
       },
     ];
     return (
@@ -368,12 +366,12 @@ class CreatePlan extends React.Component {
             onCancel={this.handleCancel}
           >
             <Row gutter={[10, 10]}>
-              <Col>
+              <Col flex={2}>
                 <ConfigProvider locale={locale}>
-                  <DatePicker onChange={this.onChangeDate} size="large" />
+                  <DatePicker onChange={this.onChangeDate} size="large" style={{ width: '100%' }} />
                 </ConfigProvider>
               </Col>
-              <Col>
+              <Col flex={1}>
                 <ConfigProvider locale={locale}>
                   <TimePicker
                     defaultValue={moment(this.state.latestTime, "HH:mm")}
@@ -381,12 +379,13 @@ class CreatePlan extends React.Component {
                     format={"HH:mm"}
                     minuteStep={15}
                     size="large"
+                    style={{ width: '100%' }}
                   />
                 </ConfigProvider>
               </Col>
             </Row>
             <Row gutter={[10, 10]}>
-              <Col>
+              <Col style={{ width: '100%' }}>
                 <Search
                   placeholder="ค้นหาสถานที่"
                   enterButton="ค้นหา"
@@ -402,7 +401,7 @@ class CreatePlan extends React.Component {
                   rowKey="uid"
                   columns={columns}
                   dataSource={this.state.dataTable}
-                  pagination={{ pageSize: 10 }}
+                  pagination={{ pageSize: 5 }}
                   onRow={(record) => {
                     return {
                       onClick: () => {
