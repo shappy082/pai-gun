@@ -3,8 +3,8 @@ import { Redirect, Link } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 import "moment/locale/th";
-import { Button, Row, Col, Typography, Avatar, Table } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Button, Row, Col, Typography, Avatar, Table, Popconfirm } from "antd";
+import { UserOutlined, FacebookOutlined, ShareAltOutlined, DeleteOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { purple } from "@ant-design/colors";
 const { Title } = Typography;
 
@@ -16,6 +16,7 @@ class TripDetail extends React.Component {
       create_date: "",
       plan: [],
       isLoggedIn: true,
+      deleted: false
     };
   }
 
@@ -23,16 +24,37 @@ class TripDetail extends React.Component {
     this.searchTrip();
   }
 
+  confirmDelete = async () => {
+    try {
+      const response = await axios.delete(
+        process.env.REACT_APP_API_URL +
+        "/planning/delete/" +
+        sessionStorage.getItem("trip_id")
+      );
+      console.log(response)
+      if (response.data.success) {
+        alert("ลบแผนการท่องเที่ยวเรียบร้อย")
+        this.setState({
+          deleted: true
+        })
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    // console.log("All Plans", this.state.plan);
+  }
+
   searchTrip = async () => {
     try {
       const response = await axios.get(
         process.env.REACT_APP_API_URL +
-          "/planning/trip/" +
-          sessionStorage.getItem("trip_id")
+        "/planning/trip/" +
+        sessionStorage.getItem("trip_id")
       );
       let results = response.data.data;
       if (results.status !== false) {
         this.setState({
+          plan_user_id: results.user_id,
           plan_name: results.plan_name,
           create_date: results.create_date,
           plan: results.plan,
@@ -41,13 +63,16 @@ class TripDetail extends React.Component {
     } catch (err) {
       console.error(err);
     }
-    console.log("All Plans", this.state.plan);
+    // console.log("All Plans", this.state.plan);
   };
 
   render() {
     if (this.state.isLoggedIn === false) {
       sessionStorage.clear();
       return <Redirect to="/login" />;
+    }
+    if (this.state.deleted === true) {
+      return <Redirect to="/myplan" />;
     }
     const columns = [
       {
@@ -115,6 +140,7 @@ class TripDetail extends React.Component {
             </Button>
           </Col>
         </Row>
+
         <Row
           type="flex"
           justify="center"
@@ -122,6 +148,23 @@ class TripDetail extends React.Component {
           style={{ marginBottom: 10 }}
         >
           <Col style={{ width: "50%" }}>
+            <Row gutter={10} justify="end" style={{ marginBottom: 10 }}>
+              <Col><Button type="primary" size="large" icon={<FacebookOutlined />}></Button></Col>
+              <Col><Button type="primary" size="large" icon={<ShareAltOutlined />}></Button></Col>
+              <Col hidden={
+                Number(sessionStorage.getItem('user_id')) !== this.state.plan_user_id ? true : false
+              }>
+                <Popconfirm
+                  title="แน่ใจที่จะลบ?"
+                  onConfirm={this.confirmDelete}
+                  okText="ลบ"
+                  cancelText="ยกเลิก"
+                  icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                >
+                  <Button type="danger" size="large" icon={<DeleteOutlined />}></Button>
+                </Popconfirm>
+              </Col>
+            </Row>
             <Table
               bordered
               rowKey={this.state.plan._id}

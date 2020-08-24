@@ -24,7 +24,12 @@ class SignupPage extends React.Component {
           name: values.name,
         }
       );
-      console.log(result);
+      if (result.data.success) {
+        alert("ลงทะเบียนสำเร็จ")
+        this.setState({
+          done: true
+        })
+      }
     } catch (err) {
       alert("data wrong.");
     }
