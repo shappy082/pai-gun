@@ -34,8 +34,8 @@ class MyPlan extends React.Component {
     try {
       const response = await axios.get(
         process.env.REACT_APP_API_URL +
-          "/planning/user/" +
-          sessionStorage.getItem("user_id")
+        "/planning/user/" +
+        sessionStorage.getItem("user_id")
       );
       // console.log(response.status)
       // console.log(response.data.data)
@@ -50,7 +50,7 @@ class MyPlan extends React.Component {
     } catch (err) {
       console.error(err);
     }
-    // console.log("All Plans", this.state.plan);
+    console.log("All Plans", this.state.plan);
   };
 
   seeDetail = (trip_id) => {
@@ -139,32 +139,48 @@ class MyPlan extends React.Component {
             </Link>
           </Col>
         </Row>
-        {this.state.plan.map((eachPlan) => (
-          <Card
-            title={eachPlan.plan_name}
-            extra={moment(eachPlan.create_date).format("LL")}
-            key={eachPlan.trip_id}
-            hoverable
-            style={{
-              margin: 10,
-              border: "1px solid black",
-            }}
-            onClick={() => this.seeDetail(eachPlan.trip_id)}
-          >
-            <Meta
-              description={eachPlan.plan
-                .slice(0, 3)
-                .map((eachSubplan, index) => (
-                  <Row key={index}>
-                    <Col flex={1}>
-                      {moment(eachSubplan.date).utc().format("LT")}
-                    </Col>
-                    <Col flex={11}>{eachSubplan.location_name}</Col>
-                  </Row>
-                ))}
-            />
-          </Card>
-        ))}
+        <Row
+          type="flex"
+          justify="center"
+          align="top"
+          style={{ marginBottom: 10 }}
+        >
+          <Col style={{ width: '50%' }} hidden={this.state.plan.length > 0}>
+            <div align="middle">
+              <Title level={4} style={{ marginTop: 10 }}>
+                คุณยังไม่มีแผนการเดินทาง โปรดสร้างหรือสำรวจ
+            </Title>
+            </div>
+          </Col>
+        </Row>
+        {
+          this.state.plan.map((eachPlan) => (
+            <Card
+              title={eachPlan.plan_name}
+              extra={moment(eachPlan.create_date).format("LL")}
+              key={eachPlan.trip_id}
+              hoverable
+              style={{
+                margin: 10,
+                border: "1px solid black",
+              }}
+              onClick={() => this.seeDetail(eachPlan.trip_id)}
+            >
+              <Meta
+                description={eachPlan.plan
+                  .slice(0, 3)
+                  .map((eachSubplan, index) => (
+                    <Row key={index}>
+                      <Col flex={1}>
+                        {moment(eachSubplan.date).utc().format("LT")}
+                      </Col>
+                      <Col flex={11}>{eachSubplan.location_name}</Col>
+                    </Row>
+                  ))}
+              />
+            </Card>
+          ))
+        }
       </div>
     );
   }

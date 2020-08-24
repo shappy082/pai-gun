@@ -9,7 +9,7 @@ import {
   GlobalOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { blue } from "@ant-design/colors";
+import { yellow } from "@ant-design/colors";
 
 const { Title } = Typography;
 
@@ -57,7 +57,7 @@ class AddLocation extends React.Component {
           justify="space-between"
           align="middle"
           style={{
-            backgroundColor: blue[3],
+            backgroundColor: yellow[3],
             marginBottom: 10,
           }}
         >
@@ -100,7 +100,7 @@ class AddLocation extends React.Component {
             >
               <Form.Item
                 name="location_name"
-                label="location_name"
+                label="ชื่อสถานที่"
                 rules={[
                   {
                     required: true,
@@ -117,7 +117,7 @@ class AddLocation extends React.Component {
               </Form.Item>
               <Form.Item
                 name="location"
-                label="location"
+                label="ตำแหน่ง"
                 rules={[
                   {
                     required: true,
@@ -132,7 +132,7 @@ class AddLocation extends React.Component {
               </Form.Item>
               <Form.Item
                 name="tag"
-                label="tag"
+                label="Tags"
                 rules={[
                   {
                     required: true,
@@ -147,7 +147,7 @@ class AddLocation extends React.Component {
               </Form.Item>
               <Form.Item name="submit">
                 <Button type="primary" htmlType="submit">
-                  Add
+                  เพิ่ม
                 </Button>
               </Form.Item>
             </Form>

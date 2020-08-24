@@ -17,7 +17,7 @@ import {
   Avatar,
 } from "antd";
 import { PlusOutlined, UserOutlined, DeleteOutlined } from "@ant-design/icons";
-import { yellow } from "@ant-design/colors";
+import { blue } from "@ant-design/colors";
 import locale from "antd/es/locale/th_TH";
 const { Title } = Typography;
 const { Search } = Input;
@@ -61,7 +61,7 @@ class CreatePlan extends React.Component {
     this.setState(
       {
         [e.target.name]: e.target.value,
-      } //() => console.log(this.state.plan_name)
+      }//, () => console.log(this.state.plan)
     );
   };
 
@@ -137,22 +137,26 @@ class CreatePlan extends React.Component {
   };
 
   selectLocation = (record) => {
-    this.setState(
-      (prevState) => ({
-        plan: [
-          ...prevState.plan,
-          {
-            location_id: record.location_id,
-            location_name: record.location_name,
-            date:
-              this.state.latestDate + "T" + this.state.latestTime + ":00.000Z",
-          },
-        ],
-        dataTable: [],
-        visible: false,
-      }),
-      // () => console.log(this.state.plan)
-    );
+    if (this.state.latestDate === "") {
+      alert("โปรดระบุวันที่")
+    } else {
+      this.setState(
+        (prevState) => ({
+          plan: [
+            ...prevState.plan,
+            {
+              location_id: record.location_id,
+              location_name: record.location_name,
+              date:
+                this.state.latestDate + "T" + this.state.latestTime + ":00.000Z",
+            },
+          ],
+          dataTable: [],
+          visible: false,
+        }),
+        // () => console.log(this.state.plan)
+      );
+    }
   };
 
   onDelete = (record) => {
@@ -272,7 +276,7 @@ class CreatePlan extends React.Component {
           justify="space-between"
           align="middle"
           style={{
-            backgroundColor: yellow[3],
+            backgroundColor: blue[3],
             marginBottom: 10,
           }}
         >
@@ -304,7 +308,7 @@ class CreatePlan extends React.Component {
               <Row align="middle" gutter={10}>
                 <Col>
                   <Title level={4} style={{ marginTop: 5 }}>
-                    ชื่อ Trip
+                    ชื่อแผนการท่องเที่ยว
                   </Title>
                 </Col>
                 <Col>
@@ -348,7 +352,17 @@ class CreatePlan extends React.Component {
             align="top"
             style={{ marginBottom: 10 }}
           >
-            <Col style={{ width: "500px" }}>
+            <Col style={{ width: '50%' }} hidden={this.state.plan.length !== 0}>
+              <div align="middle">
+                <Title level={4} style={{ marginTop: 10 }}>
+                  โปรดตั้งชื่อแผนการท่องเที่ยวและกดปุ่ม "เพิ่ม"
+                </Title>
+                <Title level={4} style={{ marginTop: 10 }}>
+                  เมื่อเสร็จสิ้นกดปุ่ม "บันทึก"
+                </Title>
+              </div>
+            </Col>
+            <Col style={{ width: "500px" }} hidden={this.state.plan.length === 0}>
               <Table
                 bordered
                 rowKey={this.state.plan._id}

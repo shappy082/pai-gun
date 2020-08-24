@@ -16,7 +16,8 @@ class TripDetail extends React.Component {
       create_date: "",
       plan: [],
       isLoggedIn: true,
-      deleted: false
+      deleted: false,
+      delButton: false,
     };
   }
 
@@ -52,9 +53,10 @@ class TripDetail extends React.Component {
         sessionStorage.getItem("trip_id")
       );
       let results = response.data.data;
+      // console.log("results", results)
       if (results.status !== false) {
         this.setState({
-          plan_user_id: results.user_id,
+          delButton: Number(sessionStorage.getItem('user_id')) !== results.user_id ? true : false,
           plan_name: results.plan_name,
           create_date: results.create_date,
           plan: results.plan,
@@ -63,7 +65,7 @@ class TripDetail extends React.Component {
     } catch (err) {
       console.error(err);
     }
-    // console.log("All Plans", this.state.plan);
+    // console.log("All Plans", this.state);
   };
 
   render() {
@@ -84,6 +86,7 @@ class TripDetail extends React.Component {
         dataIndex: "date",
         key: "date",
         render: (date) => <div align="middle">{moment(date).format("LL")}</div>,
+        width: 200
       },
       {
         title: () => (
@@ -96,6 +99,7 @@ class TripDetail extends React.Component {
         render: (date) => (
           <div align="middle">{moment(date).utc().format("LT")}</div>
         ),
+        width: 100
       },
       {
         title: () => (
@@ -106,6 +110,7 @@ class TripDetail extends React.Component {
         dataIndex: "location_name",
         key: "location_name",
         render: (location_name) => <div align="middle">{location_name}</div>,
+        width: 400
       },
     ];
     return (
@@ -151,9 +156,7 @@ class TripDetail extends React.Component {
             <Row gutter={10} justify="end" style={{ marginBottom: 10 }}>
               <Col><Button type="primary" size="large" icon={<FacebookOutlined />}></Button></Col>
               <Col><Button type="primary" size="large" icon={<ShareAltOutlined />}></Button></Col>
-              <Col hidden={
-                Number(sessionStorage.getItem('user_id')) !== this.state.plan_user_id ? true : false
-              }>
+              <Col hidden={this.state.delButton}>
                 <Popconfirm
                   title="แน่ใจที่จะลบ?"
                   onConfirm={this.confirmDelete}

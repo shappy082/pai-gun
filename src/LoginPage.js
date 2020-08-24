@@ -3,7 +3,7 @@ import axios from "axios";
 import { Redirect, Link } from "react-router-dom";
 import "./index.css";
 import "antd/dist/antd.css";
-import { Form, Input, Button, Row, Col } from "antd";
+import { Form, Input, Button, Row, Col, Card } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 class LoginPage extends React.Component {
@@ -59,54 +59,58 @@ class LoginPage extends React.Component {
         style={{ minHeight: "100vh" }}
       >
         <Col>
-          <img src="logo3.png" alt="logo" style={{ margin: 10 }} />
-          <Form
-            name="normal_login"
-            className="login-form"
-            style={{ width: 300 }}
-            onFinish={this.onFinish}
-          >
-            <Form.Item
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your Username!",
-                },
-              ]}
+          <Card hoverable>
+            <img src="logo3.png" alt="logo" style={{ margin: 10 }} />
+            <Form
+              name="normal_login"
+              className="login-form"
+              style={{ width: 300 }}
+              onFinish={this.onFinish}
             >
-              <Input
-                prefix={<UserOutlined className="site-form-item-icon" />}
-                placeholder="Username"
-              />
-            </Form.Item>
-            <Form.Item
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your Password!",
-                },
-              ]}
-            >
-              <Input
-                prefix={<LockOutlined className="site-form-item-icon" />}
-                type="password"
-                placeholder="Password"
-              />
-            </Form.Item>
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="login-form-button"
+              <Form.Item
+                name="username"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your Username!",
+                  },
+                ]}
               >
-                Log in
+                <Input
+                  prefix={<UserOutlined className="site-form-item-icon" />}
+                  placeholder="Username"
+                />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your Password!",
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  type="password"
+                  placeholder="Password"
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="login-form-button"
+                >
+                  Log in
               </Button>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OR &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Link to="/signup">Register Now!</Link>
-            </Form.Item>
-          </Form>
+              </Form.Item>
+            </Form>
+
+          </Card>
+
         </Col>
       </Row>
     );
