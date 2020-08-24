@@ -153,34 +153,45 @@ class MyPlan extends React.Component {
             </div>
           </Col>
         </Row>
-        {
-          this.state.plan.map((eachPlan) => (
-            <Card
-              title={eachPlan.plan_name}
-              extra={moment(eachPlan.create_date).format("LL")}
-              key={eachPlan.trip_id}
-              hoverable
-              style={{
-                margin: 10,
-                border: "1px solid black",
-              }}
-              onClick={() => this.seeDetail(eachPlan.trip_id)}
-            >
-              <Meta
-                description={eachPlan.plan
-                  .slice(0, 3)
-                  .map((eachSubplan, index) => (
-                    <Row key={index}>
-                      <Col flex={1}>
-                        {moment(eachSubplan.date).utc().format("LT")}
-                      </Col>
-                      <Col flex={11}>{eachSubplan.location_name}</Col>
-                    </Row>
-                  ))}
-              />
-            </Card>
-          ))
-        }
+        <Row
+          type="flex"
+          justify="center"
+          align="top"
+          style={{ marginBottom: 10 }}
+        >
+          <Col style={{ width: "60%" }}>
+            {
+              this.state.plan.map((eachPlan) => (
+
+                <Card
+                  title={eachPlan.plan_name}
+                  extra={moment(eachPlan.create_date).format("LL")}
+                  key={eachPlan.trip_id}
+                  hoverable
+                  style={{
+                    margin: 10,
+                    border: "1px solid black",
+                  }}
+                  onClick={() => this.seeDetail(eachPlan.trip_id)}
+                >
+                  <Meta
+                    description={eachPlan.plan
+                      .slice(0, 3)
+                      .map((eachSubplan, index) => (
+                        <Row key={index}>
+                          <Col flex={1}>
+                            {moment(eachSubplan.date).utc().format("LT")}
+                          </Col>
+                          <Col flex={11}>{eachSubplan.location_name}</Col>
+                        </Row>
+                      ))}
+                  />
+                </Card>
+
+              ))
+            }
+          </Col>
+        </Row>
       </div>
     );
   }
